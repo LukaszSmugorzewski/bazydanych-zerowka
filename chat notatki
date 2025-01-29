@@ -1,0 +1,663 @@
+Wykład 1: Wprowadzenie do Baz Danych
+
+4. Podstawowe Pojęcia
+Baza danych: Zorganizowany zbiór danych opisujący wybrany fragment rzeczywistości (np. dane o klientach, produktach, zamówieniach).
+
+Schemat baz danych: Definiuje strukturę danych (tabele, kolumny, relacje) oraz sposób ich przechowywania.
+
+System zarządzania bazą danych (DBMS): Oprogramowanie do zarządzania bazami danych (np. Oracle, MySQL, PostgreSQL).
+
+System baz danych: Składa się z bazy danych i DBMS.
+
+Model danych: Zbiór zasad opisujących, jak dane są reprezentowane i przetwarzane.
+
+5. System Zarządzania Bazą Danych (DBMS)
+Funkcje DBMS:
+
+Modyfikacja schematu: Zmiana struktury bazy danych.
+
+Zapytania i aktualizacje: Wyszukiwanie i modyfikacja danych.
+
+Zarządzanie transakcjami: Zapewnienie spójności danych (ACID).
+
+Zarządzanie pamięcią: Optymalizacja dostępu do danych.
+
+Cechy DBMS:
+
+Masywny: Może przechowywać terabajty danych.
+
+Trwały: Dane są przechowywane nawet po awarii systemu.
+
+Bezpieczny: Mechanizmy kontroli dostępu i backupu.
+
+Wielu użytkowników: Współdzielenie danych przez wielu użytkowników.
+
+Wygodny: Język SQL umożliwia łatwe zarządzanie danymi.
+
+Efektywny: Obsługa tysięcy zapytań na sekundę.
+
+Niezawodny: Wysoka dostępność (ponad 99%).
+
+6. Właściwości Baz Danych
+Współdzielenie danych: Wiele użytkowników może jednocześnie korzystać z bazy.
+
+Integracja danych: Eliminacja redundancji (brak powtarzających się danych).
+
+Integralność danych: Dane muszą dokładnie odzwierciedlać rzeczywistość.
+
+Trwałość danych: Dane są przechowywane przez długi czas.
+
+Bezpieczeństwo danych: Kontrola dostępu do danych.
+
+Abstrakcja danych: Opisują tylko istotne aspekty rzeczywistości.
+
+Niezależność danych: Dane są niezależne od aplikacji, które z nich korzystają.
+
+7. Funkcje Baz Danych
+Aktualizujące: Operacje modyfikujące dane (INSERT, UPDATE, DELETE).
+
+Zapytań: Operacje wyszukiwania danych (SELECT).
+
+8. Modele Danych
+Modele historyczne:
+
+Sieciowy: Dane organizowane w sieci powiązań.
+
+Hierarchiczny: Dane organizowane w drzewo.
+
+Relacyjny model danych: Dane organizowane w tabelach (relacjach).
+
+Obiektowy model danych: Dane reprezentowane jako obiekty.
+
+Obiektowo-relacyjny: Połączenie modelu relacyjnego i obiektowego.
+
+Wykład 2: Relacyjny Model Danych
+1. Definicja Danych
+Relacja: Dwuwymiarowa tabela, gdzie każdy wiersz to krotka, a kolumny to atrybuty.
+
+Atrybuty: Kolumny tabeli, opisujące właściwości encji.
+
+Schemat relacji: Nazwa relacji + lista atrybutów (np. Miasto(id, nazwa, id_regionu)).
+
+Krotki: Wiersze tabeli, zawierające konkretne dane.
+
+2. Cechy Relacji
+Jednoznaczna nazwa relacji i kolumn: Każda relacja i kolumna ma unikalną nazwę.
+
+Ten sam typ wartości w kolumnie: Wszystkie wartości w kolumnie muszą być tego samego typu.
+
+Brak powtórzeń wierszy: Każdy wiersz musi być unikalny.
+
+Wartości atomowe: Wartości w polach muszą być niepodzielne (atomowe).
+
+3. Klucze
+Klucz główny (Primary Key): Jedna lub więcej kolumn, które jednoznacznie identyfikują każdy wiersz.
+
+Klucz kandydujący: Atrybut lub zbiór atrybutów, które mogą być kluczem głównym.
+
+Klucz obcy (Foreign Key): Kolumna, która odnosi się do klucza głównego innej tabeli.
+
+4. Operowanie Danymi
+Algebra relacyjna:
+
+Selekcja: Wybór wierszy spełniających warunek (np. SELECT * FROM student WHERE imie='Jan').
+
+Rzut: Wybór określonych kolumn (np. SELECT nazwisko, placa FROM pracownik).
+
+Złączenie: Łączenie danych z wielu tabel (np. INNER JOIN, LEFT JOIN).
+
+Suma, przecięcie, różnica: Operacje na zbiorach danych.
+
+Operacje dynamiczne:
+
+INSERT: Dodawanie nowych wierszy (np. INSERT INTO pracownik VALUES (1, 'Kowalski', 3000)).
+
+DELETE: Usuwanie wierszy (np. DELETE FROM pracownik WHERE id=1).
+
+UPDATE: Modyfikacja istniejących wierszy (np. UPDATE pracownik SET placa=4000 WHERE id=1).
+
+5. Złączenia
+Iloczyn kartezjański: Każdy wiersz z jednej tabeli jest łączony z każdym wierszem z drugiej tabeli.
+
+Równozłączenie: Iloczyn kartezjański z selekcją wierszy, gdzie klucze są równe.
+
+Złączenie naturalne: Równozłączenie, ale z usunięciem zduplikowanych kolumn.
+
+Złączenia zewnętrzne:
+
+Lewostronne: Zachowuje wszystkie wiersze z lewej tabeli, nawet jeśli nie ma dopasowania w prawej.
+
+Prawostronne: Zachowuje wszystkie wiersze z prawej tabeli, nawet jeśli nie ma dopasowania w lewej.
+
+Obustronne: Zachowuje wszystkie wiersze z obu tabel.
+
+6. Integralność Danych
+Integralność encji: Klucz główny musi być unikalny i nie może być NULL.
+
+Integralność referencyjna: Klucz obcy musi odnosić się do istniejącego klucza głównego w innej tabeli.
+
+Wykład 3: Modelowanie – Model Związków Encji
+1. Modelowanie
+Model konceptualny: Opisuje strukturę danych na wysokim poziomie abstrakcji (np. diagramy ERD).
+
+Model implementacyjny: Konkretna implementacja modelu (np. relacyjny, NoSQL).
+
+2. Etapy Projektowania Systemu
+Analiza: Określenie wymagań (jakie dane i funkcjonalności są potrzebne).
+
+Projektowanie: Przekształcenie modelu konceptualnego w model implementacyjny.
+
+Implementacja: Tworzenie bazy danych i aplikacji.
+
+Wdrożenie: Uruchomienie systemu w środowisku produkcyjnym.
+
+Utrzymanie: Poprawki i optymalizacje.
+
+3. Model Związków Encji (ERD)
+Encja: Odpowiednik klasy w modelu obiektowym (np. Pracownik, Student).
+
+Atrybuty: Właściwości encji (np. imię, nazwisko, wiek).
+
+Związki: Powiązania między encjami (np. Pracownik pracuje w Dziale).
+
+4. Rodzaje Związków
+1:1 (jeden do jednego): Każda encja z jednej strony związku jest powiązana z dokładnie jedną encją z drugiej strony (np. Kierownik zarządza Działem).
+
+1:M (jeden do wielu): Jedna encja może być powiązana z wieloma encjami z drugiej strony (np. Dział ma wielu Pracowników).
+
+N:M (wiele do wielu): Wiele encji z jednej strony może być powiązanych z wieloma encjami z drugiej strony (np. Student uczestniczy w wielu Kursach, a Kurs ma wielu Studentów).
+
+Związki wieloargumentowe: Powiązania między więcej niż dwiema encjami (np. Kierowca, Mandat, Policjant).
+
+5. Przekształcanie Modelu Encji na Relacyjny
+Encja → Tabela: Każda encja staje się tabelą.
+
+Atrybuty → Kolumny: Atrybuty encji stają się kolumnami tabeli.
+
+Związki → Klucze obce: Związki między encjami są reprezentowane przez klucze obce.
+
+Wykład 5: SQL – Structured Query Language (1)
+1. Zadania SQL
+Definiowanie danych: Tworzenie i modyfikacja struktur danych (CREATE, ALTER, DROP).
+
+Definiowanie perspektyw: Tworzenie widoków (VIEW).
+
+Przetwarzanie danych: Wyszukiwanie, dodawanie, modyfikacja i usuwanie danych (SELECT, INSERT, UPDATE, DELETE).
+
+Definiowanie reguł integralności: Ograniczenia na danych (PRIMARY KEY, FOREIGN KEY, CHECK).
+
+Autoryzacja: Kontrola dostępu do danych (GRANT, REVOKE).
+
+Zarządzanie transakcjami: BEGIN, COMMIT, ROLLBACK.
+
+2. Cechy SQL
+Trójwartościowa logika: TRUE, FALSE, UNKNOWN (np. NULL).
+
+Sposoby użycia:
+
+Interaktywny: Bezpośrednie wykonywanie zapytań przez użytkownika.
+
+Statyczny: Stały kod SQL w aplikacjach.
+
+Dynamiczny: Generowanie zapytań w trakcie działania aplikacji.
+
+3. Grupy Instrukcji SQL
+DDL (Data Definition Language):
+
+CREATE: Tworzenie tabel, baz danych.
+
+ALTER: Modyfikacja struktury tabel.
+
+DROP: Usuwanie tabel, baz danych.
+
+DML (Data Manipulation Language):
+
+SELECT: Wyszukiwanie danych.
+
+INSERT: Dodawanie nowych wierszy.
+
+UPDATE: Modyfikacja istniejących wierszy.
+
+DELETE: Usuwanie wierszy.
+
+DCL (Data Control Language):
+
+GRANT: Nadawanie uprawnień.
+
+REVOKE: Odbieranie uprawnień.
+
+4. Typy Danych w SQL
+Znakowe:
+
+CHAR(n): Stała długość tekstu (n znaków).
+
+VARCHAR(n): Zmienna długość tekstu (max n znaków).
+
+TEXT: Długie teksty.
+
+Liczbowe:
+
+INT: Liczby całkowite.
+
+FLOAT: Liczby zmiennoprzecinkowe.
+
+DECIMAL: Liczby stałoprzecinkowe.
+
+Data i czas:
+
+DATE: Data (RRRR-MM-DD).
+
+TIME: Czas (GG:MM:SS ).
+
+DATETIME: Data i czas (RRRR-MM-DD GG:MM:SS ).
+
+5. Ograniczenia w SQL
+NOT NULL: Wymusza, że kolumna nie może być pusta.
+
+UNIQUE: Wymusza unikalność wartości w kolumnie.
+
+CHECK: Nakłada warunek na wartości w kolumnie (np. CHECK(age > 18)).
+
+PRIMARY KEY: Klucz główny, jednoznacznie identyfikujący wiersz.
+
+FOREIGN KEY: Klucz obcy, odnosi się do klucza głównego innej tabeli.
+
+6. Silniki Składowania Danych
+MyISAM:
+
+Szybki dostęp do danych.
+
+Brak obsługi transakcji.
+
+Używany do prostych aplikacji.
+
+InnoDB:
+
+Obsługa transakcji (ACID).
+
+Więzi integralności (klucze obce).
+
+Używany w aplikacjach wymagających spójności danych.
+
+7. Modyfikacja Schematu
+ALTER TABLE:
+
+Dodawanie kolumn: ALTER TABLE tabela ADD COLUMN kolumna typ;
+
+Usuwanie kolumn: ALTER TABLE tabela DROP COLUMN kolumna;
+
+Modyfikacja kolumn: ALTER TABLE tabela MODIFY kolumna nowy_typ;
+
+DROP TABLE: Usuwanie tabeli (DROP TABLE tabela;).
+
+RENAME TABLE: Zmiana nazwy tabeli (RENAME TABLE stara_nazwa TO nowa_nazwa;).
+
+Wykład 6: SQL – Structured Query Language (2)
+1. Modyfikacje Baz Danych
+INSERT INTO: Dodawanie nowych wierszy do tabeli.
+
+Składnia: INSERT INTO tabela VALUES (wart1, wart2, ..., wartn);
+
+Przykład:
+
+sql
+Copy
+INSERT INTO Studenci VALUES (123456, 'Kowal', 'Stefan', 'Akacjowa 4 Łódź', 5);
+Wstawianie z wyborem kolumn:
+
+sql
+Copy
+INSERT INTO Studenti (rok, nrIndeksu, nazwisko) VALUES (2, 321432, 'Kuś');
+Wstawianie wyników zapytania:
+
+sql
+Copy
+INSERT INTO Studenci (Imie, Nazwisko, rok) 
+SELECT imię, nazwisko, 1 FROM Kandydaci;
+DELETE FROM: Usuwanie wierszy z tabeli.
+
+Składnia: DELETE FROM tabela [WHERE warunek];
+
+Przykład:
+
+sql
+Copy
+DELETE FROM Student WHERE rok=5;
+Usuwanie wszystkich wierszy:
+
+sql
+Copy
+DELETE FROM Student;
+UPDATE: Modyfikacja istniejących wierszy.
+
+Składnia: UPDATE tabela SET kolumna=wartość [WHERE warunek];
+
+Przykład:
+
+sql
+Copy
+UPDATE Studenti SET rok=rok+1 WHERE rok<5;
+Aktualizacja wielu kolumn:
+
+sql
+Copy
+UPDATE Pracownicy SET placa=placa+300 WHERE stanowisko<>'Dyrektor';
+2. Wyszukiwanie Danych
+SELECT: Wybieranie danych z tabeli.
+
+Składnia: SELECT * FROM tabela; – zwraca wszystkie wiersze.
+
+Przykład:
+
+sql
+Copy
+SELECT * FROM Pracownicy WHERE pensja>3000;
+Selekcja: Filtrowanie danych za pomocą warunków.
+
+sql
+Copy
+SELECT * FROM Pracownicy WHERE Nazwisko LIKE '%ra%' AND Pensja BETWEEN 1000 AND 2500;
+Projekcja: Wybieranie konkretnych kolumn.
+
+sql
+Copy
+SELECT imie, nazwisko FROM Pracownicy;
+Aliasy i wyrażenia: Używanie aliasów i funkcji tekstowych.
+
+sql
+Copy
+SELECT CONCAT(imie, ' ', nazwisko) AS Osoba FROM Pracownicy;
+Sortowanie: ORDER BY kolumna [ASC|DESC];
+
+sql
+Copy
+SELECT * FROM Pracownicy ORDER BY imie, placa DESC;
+Usuwanie duplikatów: DISTINCT
+
+sql
+Copy
+SELECT DISTINCT Imie FROM Pracownicy;
+3. Funkcje Agregujące
+AVG(): Średnia wartość.
+
+sql
+Copy
+SELECT AVG(Ocena) FROM Egzamin;
+COUNT(): Liczba wierszy.
+
+sql
+Copy
+SELECT COUNT(*) FROM Pracownicy;
+MIN(): Minimalna wartość.
+
+sql
+Copy
+SELECT MIN(Pensja) FROM Pracownicy;
+MAX(): Maksymalna wartość.
+
+sql
+Copy
+SELECT MAX(Pensja) FROM Pracownicy;
+SUM(): Suma wartości.
+
+sql
+Copy
+SELECT SUM(Pensja) FROM Pracownicy;
+GROUP BY: Grupowanie danych.
+
+sql
+Copy
+SELECT Stanowisko, AVG(Pensja) FROM Pracownicy GROUP BY Stanowisko;
+HAVING: Filtrowanie grup.
+
+sql
+Copy
+SELECT Stanowisko, AVG(Pensja) FROM Pracownicy GROUP BY Stanowisko HAVING AVG(Pensja) > 3000;
+4. Łączenie Tabel
+INNER JOIN: Łączenie tabel na podstawie warunku.
+
+sql
+Copy
+SELECT Tytuł, Ilość FROM Książki JOIN Zamówienia ON Książki.id = Zamówienia.IdKsiazki;
+LEFT JOIN: Zwraca wszystkie wiersze z lewej tabeli, nawet jeśli nie ma dopasowania w prawej.
+
+sql
+Copy
+SELECT Tytuł, Ilość FROM Książki LEFT JOIN Zamówienia ON Książki.id = Zamówienia.IdKsiazki;
+RIGHT JOIN: Zwraca wszystkie wiersze z prawej tabeli, nawet jeśli nie ma dopasowania w lewej.
+
+sql
+Copy
+SELECT Tytuł, Ilość FROM Książki RIGHT JOIN Zamówienia ON Książki.id = Zamówienia.IdKsiazki;
+FULL JOIN: Zwraca wszystkie wiersze z obu tabel.
+
+sql
+Copy
+SELECT Tytuł, Ilość FROM Książki FULL JOIN Zamówienia ON Książki.id = Zamówienia.IdKsiazki;
+Wykład 7: SQL – Structured Query Language (3)
+1. Podzapytania
+Podzapytania w WHERE: Filtrowanie danych na podstawie wyników innego zapytania.
+
+sql
+Copy
+SELECT * FROM pracownik WHERE zarobki = (SELECT MAX(zarobki) FROM pracownik);
+Podzapytania w FROM: Używanie wyników podzapytania jako tabeli.
+
+sql
+Copy
+SELECT * FROM (SELECT * FROM pracownik WHERE zarobki > 3000) AS bogaci;
+Podzapytania skorelowane: Podzapytania zależne od zapytania głównego.
+
+sql
+Copy
+SELECT a.imie, a.nazwisko FROM pracownik a WHERE zarobki = (SELECT MAX(b.zarobki) FROM pracownik b WHERE b.stanowisko = a.stanowisko);
+2. Perspektywy (Widoki)
+Tworzenie widoków: CREATE VIEW nazwa AS SELECT ...;
+
+sql
+Copy
+CREATE VIEW bogacze AS SELECT * FROM Pracownik WHERE zarobki > 4000;
+Modyfikacja widoków: CREATE OR REPLACE VIEW nazwa AS SELECT ...;
+
+sql
+Copy
+CREATE OR REPLACE VIEW bogacze AS SELECT * FROM Pracownik WHERE zarobki > 5000;
+Usuwanie widoków: DROP VIEW nazwa;
+
+sql
+Copy
+DROP VIEW bogacze;
+3. Funkcje MySQL
+Funkcje warunkowe:
+
+CASE: Warunkowe zwracanie wartości.
+
+sql
+Copy
+SELECT CASE 1 WHEN 1 THEN 'jeden' WHEN 2 THEN 'dwa' ELSE 'więcej' END;
+IF: Warunkowe zwracanie wartości.
+
+sql
+Copy
+SELECT IF(1>0, 'true', 'false');
+Funkcje tekstowe:
+
+CONCAT: Łączenie ciągów znaków.
+
+sql
+Copy
+SELECT CONCAT(imie, ' ', nazwisko) FROM Pracownicy;
+SUBSTRING: Wyciąganie fragmentu tekstu.
+
+sql
+Copy
+SELECT SUBSTRING('testtesttest', 5, 6);
+Funkcje liczbowe:
+
+ABS: Wartość bezwzględna.
+
+sql
+Copy
+SELECT ABS(-10);
+SQRT: Pierwiastek kwadratowy.
+
+sql
+Copy
+SELECT SQRT(16);
+ROUND: Zaokrąglanie liczb.
+
+sql
+Copy
+SELECT ROUND(3.14159, 2);
+4. Funkcje Okienkowe
+Funkcje okienkowe: Obliczenia na zbiorach wierszy.
+
+sql
+Copy
+SELECT ROW_NUMBER() OVER (PARTITION BY stanowisko ORDER BY zarobki DESC) AS rank FROM Pracownicy;
+LAG i LEAD: Dostęp do poprzednich i następnych wierszy.
+
+sql
+Copy
+SELECT LAG(zarobki, 1) OVER (ORDER BY id) FROM Pracownicy;
+Wykład 8: Bezpieczeństwo, Procedury Składowane, Funkcje i Wyzwalacze
+1. Bezpieczeństwo
+Użytkownicy i uprawnienia:
+
+Tworzenie użytkownika: CREATE USER nazwa IDENTIFIED BY 'hasło';
+
+sql
+Copy
+CREATE USER 'jan' IDENTIFIED BY 'haslo123';
+Nadawanie uprawnień: GRANT SELECT, INSERT ON tabela TO użytkownik;
+
+sql
+Copy
+GRANT SELECT, INSERT ON Pracownicy TO jan;
+Usuwanie uprawnień: REVOKE SELECT ON tabela FROM użytkownik;
+
+sql
+Copy
+REVOKE SELECT ON Pracownicy FROM jan;
+Role: Grupowanie uprawnień.
+
+Tworzenie roli: CREATE ROLE nazwa_roli;
+
+sql
+Copy
+CREATE ROLE 'kierownik';
+Nadawanie roli: GRANT nazwa_roli TO użytkownik;
+
+sql
+Copy
+GRANT kierownik TO jan;
+2. Procedury Składowane
+Tworzenie procedur: CREATE PROCEDURE nazwa (IN|OUT|INOUT parametry) BEGIN ... END;
+
+sql
+Copy
+CREATE PROCEDURE Studenti(OUT ile INT) 
+BEGIN 
+  SELECT COUNT(*) INTO ile FROM Student; 
+END;
+Wywołanie procedur: CALL nazwa_procedury(parametry);
+
+sql
+Copy
+CALL Studenti(@a);
+SELECT @a;
+3. Funkcje
+Tworzenie funkcji: CREATE FUNCTION nazwa (parametry) RETURNS typ BEGIN ... END;
+
+sql
+Copy
+CREATE FUNCTION silnia(n INT) RETURNS INT 
+BEGIN 
+  DECLARE i INT DEFAULT 1; 
+  DECLARE silnia INT DEFAULT 1; 
+  REPEAT 
+    SET silnia=silnia*i; 
+    SET i=i+1; 
+  UNTIL i>n END REPEAT; 
+  RETURN silnia; 
+END;
+4. Wyzwalacze (Triggers)
+Tworzenie wyzwalaczy: CREATE TRIGGER nazwa BEFORE|AFTER INSERT|UPDATE|DELETE ON tabela FOR EACH ROW BEGIN ... END;
+
+sql
+Copy
+CREATE TRIGGER odwrocony BEFORE INSERT ON emps 
+FOR EACH ROW 
+SET NEW.emp_name = REVERSE(NEW.emp_name);
+Wykład 9: Indeksy
+1. Wprowadzenie do Indeksów
+Indeks: Struktura danych przyspieszająca wyszukiwanie.
+
+Typy indeksów:
+
+Podstawowy: Indeks na kluczu głównym.
+
+Wtórny: Indeks na innych kolumnach.
+
+Zgrupowany: Indeks na kolumnie nieunikalnej.
+
+2. Tworzenie Indeksów
+Składnia: CREATE INDEX nazwa_indeksu ON tabela(kolumna);
+
+sql
+Copy
+CREATE INDEX idx_nazwisko ON Pracownicy(nazwisko);
+3. Rodzaje Indeksów
+Indeksy B-drzewo: Zrównoważona struktura drzewiasta.
+
+Indeksy bitmapowe: Stosowane dla kolumn o małej liczbie unikalnych wartości.
+
+Wykład 10: Transakcje
+1. Wprowadzenie do Transakcji
+Transakcja: Sekwencja operacji na bazie danych, która musi być wykonana w całości lub wcale.
+
+Własności ACID:
+
+Atomowość: Wykonanie całej transakcji lub żadnej operacji.
+
+Spójność: Baza pozostaje w spójnym stanie po transakcji.
+
+Izolacja: Transakcje nie wpływają na siebie.
+
+Trwałość: Zmiany są trwałe po zatwierdzeniu transakcji.
+
+2. Zarządzanie Transakcjami
+START TRANSACTION: Rozpoczęcie transakcji.
+
+sql
+Copy
+START TRANSACTION;
+COMMIT: Zatwierdzenie transakcji.
+
+sql
+Copy
+COMMIT;
+ROLLBACK: Wycofanie transakcji.
+
+sql
+Copy
+ROLLBACK;
+Poziomy izolacji:
+
+READ UNCOMMITTED: Najniższy poziom izolacji.
+
+READ COMMITTED: Odczyt tylko zatwierdzonych danych.
+
+REPEATABLE READ: Gwarancja, że dane nie zmienią się podczas transakcji.
+
+SERIALIZABLE: Najwyższy poziom izolacji.
+
+3. Blokowanie i Zakleszczenia
+Blokowanie: Mechanizm zapobiegający konfliktom między transakcjami.
+
+Zakleszczenie: Sytuacja, w której dwie transakcje czekają na siebie nawzajem.
+
+Rozwiązywanie zakleszczeń: Wycofanie jednej z transakcji.
+
+Mam nadzieję, że te rozbudowane notatki są teraz bardziej szczegółowe i pomocne! Jeśli masz jeszcze jakieś pytania lub potrzebujesz dodatkowych wyjaśnień, daj znać. 😊
+
