@@ -264,3 +264,444 @@ Użycie w JOIN, WHERE	❌ Nie można używać	✅ Można używać
 5. Kiedy używać funkcji, a kiedy procedur?
 ✔ Funkcji, gdy potrzebujesz zwrócić pojedynczą wartość i używać jej w SELECT
 ✔ Procedury, gdy wykonujesz kilka operacji na bazie (np. modyfikacje, transakcje)
+
+===========================================================================================PODZAPYTANIA=========================================================================
+
+1. Co to są podzapytania w SQL?
+Podzapytanie (subquery) to zapytanie SQL zagnieżdżone w innym zapytaniu.
+Może zwracać pojedynczą wartość, listę wartości lub nawet całą tabelę.
+
+🔹 Struktura podzapytania
+
+sql
+Kopiuj
+Edytuj
+SELECT kolumna FROM tabela WHERE kolumna = (SELECT ... FROM inna_tabela);
+📌 Podzapytanie musi być ujęte w nawiasy ().
+
+2. Rodzaje podzapytań
+1️⃣ Podzapytania zwracające pojedynczą wartość (scalar subquery)
+2️⃣ Podzapytania zwracające wiele wartości (multi-row subquery)
+3️⃣ Podzapytania zwracające całą tabelę (table subquery)
+
+3. Podzapytania zwracające pojedynczą wartość
+✅ Używane tam, gdzie oczekujemy jednej wartości (np. w WHERE, HAVING).
+
+🔹 Przykład: znajdź pracowników, którzy zarabiają więcej niż średnia pensja w firmie.
+
+sql
+Kopiuj
+Edytuj
+SELECT imie, nazwisko, pensja
+FROM pracownicy
+WHERE pensja > (SELECT AVG(pensja) FROM pracownicy);
+📌 Podzapytanie zwraca pojedynczą wartość → działa w WHERE.
+
+4. Podzapytania zwracające wiele wartości
+✅ Używane z operatorami IN, ANY, ALL.
+
+🔹 Przykład: znajdź klientów, którzy złożyli zamówienia.
+
+sql
+Kopiuj
+Edytuj
+SELECT imie, nazwisko
+FROM klienci
+WHERE id IN (SELECT klient_id FROM zamowienia);
+📌 Podzapytanie zwraca listę wartości → używamy IN.
+
+5. Kwantyfikatory (ANY, ALL, EXISTS)
+Kwantyfikatory pozwalają porównywać wartości zwrócone przez podzapytania.
+
+Operator	Opis
+IN	Czy wartość znajduje się w liście?
+ANY	Czy wartość pasuje do przynajmniej jednej wartości w podzapytaniu?
+ALL	Czy wartość spełnia warunek dla wszystkich wyników podzapytania?
+EXISTS	Czy podzapytanie zwróciło jakiekolwiek wyniki?
+6. ANY – przynajmniej jedna wartość
+✅ Sprawdza, czy wartość spełnia warunek dla przynajmniej jednego wiersza w podzapytaniu.
+🔹 Przykład: znajdź produkty droższe niż jakikolwiek produkt z kategorii Elektronika.
+
+sql
+Kopiuj
+Edytuj
+SELECT nazwa, cena
+FROM produkty
+WHERE cena > ANY (SELECT cena FROM produkty WHERE kategoria = 'Elektronika');
+📌 Jeśli najtańszy produkt z Elektronika kosztuje 500 zł, to zapytanie zwróci produkty droższe niż 500 zł.
+
+7. ALL – wszystkie wartości
+✅ Sprawdza, czy wartość spełnia warunek dla wszystkich wierszy w podzapytaniu.
+🔹 Przykład: znajdź produkty droższe niż wszystkie produkty z kategorii Elektronika.
+
+sql
+Kopiuj
+Edytuj
+SELECT nazwa, cena
+FROM produkty
+WHERE cena > ALL (SELECT cena FROM produkty WHERE kategoria = 'Elektronika');
+📌 Jeśli najdroższy produkt w Elektronika kosztuje 1000 zł, to zapytanie zwróci tylko produkty droższe niż 1000 zł.
+
+8. EXISTS – czy podzapytanie zwróciło wyniki?
+✅ Sprawdza, czy podzapytanie zwróciło jakiekolwiek dane (tak/nie).
+🔹 Przykład: znajdź klientów, którzy mają zamówienia.
+
+sql
+Kopiuj
+Edytuj
+SELECT imie, nazwisko
+FROM klienci
+WHERE EXISTS (SELECT 1 FROM zamowienia WHERE zamowienia.klient_id = klienci.id);
+📌 Jeśli dany klient nie ma zamówienia, to zapytanie go pominie.
+
+9. Różnice między IN, ANY, ALL, EXISTS
+Operator	Kiedy używać?	Zwracane wartości
+IN	Jeśli chcemy sprawdzić, czy wartość pasuje do listy wartości	Lista wartości
+ANY	Jeśli chcemy sprawdzić, czy wartość pasuje do przynajmniej jednej wartości	Dowolna wartość spełniająca warunek
+ALL	Jeśli chcemy sprawdzić, czy wartość pasuje do wszystkich wartości	Wartość spełniająca wszystkie warunki
+EXISTS	Jeśli chcemy sprawdzić, czy podzapytanie zwróciło dane	TRUE lub FALSE
+10. Podsumowanie
+✔ Podzapytania umożliwiają używanie wyników jednego zapytania w innym zapytaniu.
+✔ IN sprawdza, czy wartość jest w liście wyników podzapytania.
+✔ ANY sprawdza, czy wartość spełnia warunek dla przynajmniej jednej wartości.
+✔ ALL sprawdza, czy wartość spełnia warunek dla wszystkich wyników.
+✔ EXISTS zwraca TRUE / FALSE, jeśli podzapytanie ma wyniki.
+
+====================================================================================================================CASE==============================================================
+
+CASE w SQL – Instrukcja Warunkowa
+Instrukcja CASE działa jak if-else w językach programowania i pozwala na zwracanie różnych wartości w zależności od warunku.
+
+1. Struktura CASE
+SQL obsługuje dwie formy CASE:
+
+🔹 Prosta (Simple CASE) – porównuje wartość do kilku opcji
+🔹 Przeszukująca (Searched CASE) – sprawdza wiele warunków logicznych
+
+2. Prosta instrukcja CASE
+Sprawdza konkretną wartość i zwraca określony wynik.
+
+🔹 Przykład: Klasyfikacja pracowników na podstawie stanowiska
+
+sql
+Kopiuj
+Edytuj
+SELECT imie, nazwisko, stanowisko,
+    CASE stanowisko
+        WHEN 'Manager' THEN 'Kierownik'
+        WHEN 'Developer' THEN 'Programista'
+        WHEN 'Analyst' THEN 'Analityk'
+        ELSE 'Inne'
+    END AS stanowisko_polskie
+FROM pracownicy;
+✅ Jeśli stanowisko to 'Manager', wynik to 'Kierownik'.
+✅ Jeśli stanowisko nie pasuje do żadnej opcji, zwracamy 'Inne'.
+
+3. Przeszukująca instrukcja CASE
+Pozwala na sprawdzanie warunków logicznych.
+
+🔹 Przykład: Ocena wysokości pensji
+
+sql
+Kopiuj
+Edytuj
+SELECT imie, nazwisko, pensja,
+    CASE 
+        WHEN pensja >= 10000 THEN 'Wysoka'
+        WHEN pensja BETWEEN 5000 AND 9999 THEN 'Średnia'
+        ELSE 'Niska'
+    END AS kategoria_pensji
+FROM pracownicy;
+✅ Jeśli pensja >= 10000, wynik to 'Wysoka'.
+✅ Jeśli pensja między 5000-9999, wynik to 'Średnia'.
+✅ W przeciwnym razie wynik to 'Niska'.
+
+4. CASE w ORDER BY – Sortowanie warunkowe
+Możemy użyć CASE w ORDER BY, aby sortować dynamicznie.
+
+🔹 Przykład: Sortowanie pracowników według kategorii pensji
+
+sql
+Kopiuj
+Edytuj
+SELECT imie, nazwisko, pensja
+FROM pracownicy
+ORDER BY 
+    CASE 
+        WHEN pensja >= 10000 THEN 1
+        WHEN pensja BETWEEN 5000 AND 9999 THEN 2
+        ELSE 3
+    END;
+📌 Najpierw będą wysokie pensje (1), potem średnie (2), na końcu niskie (3).
+
+5. CASE w GROUP BY – Grupowanie dynamiczne
+Możemy tworzyć dynamiczne grupowanie wartości.
+
+🔹 Przykład: Liczenie pracowników według kategorii pensji
+
+sql
+Kopiuj
+Edytuj
+SELECT 
+    CASE 
+        WHEN pensja >= 10000 THEN 'Wysoka pensja'
+        WHEN pensja BETWEEN 5000 AND 9999 THEN 'Średnia pensja'
+        ELSE 'Niska pensja'
+    END AS kategoria_pensji,
+    COUNT(*) AS liczba_pracownikow
+FROM pracownicy
+GROUP BY 
+    CASE 
+        WHEN pensja >= 10000 THEN 'Wysoka pensja'
+        WHEN pensja BETWEEN 5000 AND 9999 THEN 'Średnia pensja'
+        ELSE 'Niska pensja'
+    END;
+✅ Pokazuje ile pracowników mieści się w każdej kategorii.
+
+6. CASE w HAVING – Filtrowanie grup
+Możemy filtrować wyniki grupowania.
+
+🔹 Przykład: Pokaż tylko grupy, które mają więcej niż 5 pracowników
+
+sql
+Kopiuj
+Edytuj
+SELECT 
+    CASE 
+        WHEN pensja >= 10000 THEN 'Wysoka pensja'
+        WHEN pensja BETWEEN 5000 AND 9999 THEN 'Średnia pensja'
+        ELSE 'Niska pensja'
+    END AS kategoria_pensji,
+    COUNT(*) AS liczba_pracownikow
+FROM pracownicy
+GROUP BY 
+    CASE 
+        WHEN pensja >= 10000 THEN 'Wysoka pensja'
+        WHEN pensja BETWEEN 5000 AND 9999 THEN 'Średnia pensja'
+        ELSE 'Niska pensja'
+    END
+HAVING COUNT(*) > 5;
+✅ Pokazuje tylko grupy, w których jest więcej niż 5 pracowników.
+
+7. CASE w UPDATE – Aktualizacja warunkowa
+Możemy użyć CASE do aktualizacji danych.
+
+🔹 Przykład: Przypisanie premii w zależności od pensji
+
+sql
+Kopiuj
+Edytuj
+UPDATE pracownicy
+SET premia = 
+    CASE 
+        WHEN pensja >= 10000 THEN 2000
+        WHEN pensja BETWEEN 5000 AND 9999 THEN 1000
+        ELSE 500
+    END;
+✅ Pracownicy z wysoką pensją dostaną wyższą premię.
+
+8. Podsumowanie
+Zastosowanie CASE	Przykład
+Zmiana wartości w SELECT	Tłumaczenie stanowisk
+Kategoryzacja danych	Podział pensji na "Wysoka/Średnia/Niska"
+Dynamiczne sortowanie (ORDER BY)	Sortowanie po kategorii pensji
+Dynamiczne grupowanie (GROUP BY)	Liczenie pracowników według kategorii
+Filtrowanie grup (HAVING)	Pokazanie tylko dużych grup
+Warunkowa aktualizacja (UPDATE)	Nadanie premii zależnie od pensji
+🔹 Główna zaleta CASE?
+👉 Eliminuje konieczność wielu IF i UNION w zapytaniach!
+
+==================================================================================================TRIGGERY================================================================================
+
+Trigery w SQL – Co to jest i jak działa?
+Trigger to specjalny mechanizm w bazie danych, który automatycznie wykonuje kod SQL w odpowiedzi na określone zdarzenie (np. INSERT, UPDATE, DELETE).
+
+Trigery działają automatycznie, więc nie musisz ich wywoływać ręcznie.
+
+1. Rodzaje triggerów
+Trigery można podzielić na kilka kategorii:
+
+📌 Ze względu na moment uruchomienia
+Rodzaj triggera	Opis
+BEFORE	Wykonuje kod przed operacją (INSERT, UPDATE, DELETE)
+AFTER	Wykonuje kod po operacji (INSERT, UPDATE, DELETE)
+📌 Ze względu na typ operacji
+Rodzaj triggera	Opis
+INSERT	Działa, gdy wstawiany jest nowy rekord
+UPDATE	Działa, gdy aktualizowany jest rekord
+DELETE	Działa, gdy usuwany jest rekord
+✅ Możesz użyć np. BEFORE INSERT, AFTER DELETE itp.
+
+2. Składnia triggera
+🔹 Podstawowa struktura
+sql
+Kopiuj
+Edytuj
+CREATE TRIGGER nazwa_triggera
+BEFORE | AFTER INSERT | UPDATE | DELETE
+ON nazwa_tabeli
+FOR EACH ROW
+BEGIN
+    -- Kod SQL, który zostanie wykonany
+END;
+📌 FOR EACH ROW – oznacza, że trigger działa dla każdego wiersza osobno.
+
+3. Przykłady triggerów
+📌 BEFORE INSERT – Walidacja danych przed wstawieniem
+🔹 Przykład: Nie pozwól dodać pracownika z pensją poniżej 3000 zł.
+
+sql
+Kopiuj
+Edytuj
+DELIMITER $$  
+CREATE TRIGGER sprawdz_pensje
+BEFORE INSERT ON pracownicy
+FOR EACH ROW
+BEGIN
+    IF NEW.pensja < 3000 THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'Pensja musi być co najmniej 3000 zł';
+    END IF;
+END $$  
+DELIMITER ;
+✅ NEW.pensja oznacza wartość nowego wiersza.
+
+📌 AFTER INSERT – Automatyczne logowanie operacji
+🔹 Przykład: Po dodaniu zamówienia, zapisz informację do tabeli log_zamowienia.
+
+sql
+Kopiuj
+Edytuj
+DELIMITER $$  
+CREATE TRIGGER loguj_zamowienie
+AFTER INSERT ON zamowienia
+FOR EACH ROW
+BEGIN
+    INSERT INTO log_zamowienia (zamowienie_id, data)
+    VALUES (NEW.id, NOW());
+END $$  
+DELIMITER ;
+✅ Tworzy wpis w tabeli logów po dodaniu zamówienia.
+
+📌 BEFORE UPDATE – Zmiana wartości przed aktualizacją
+🔹 Przykład: Jeśli ktoś chce ustawić pensję mniejszą niż 3000 zł, automatycznie ustaw na 3000.
+
+sql
+Kopiuj
+Edytuj
+DELIMITER $$  
+CREATE TRIGGER minimalna_pensja
+BEFORE UPDATE ON pracownicy
+FOR EACH ROW
+BEGIN
+    IF NEW.pensja < 3000 THEN
+        SET NEW.pensja = 3000;
+    END IF;
+END $$  
+DELIMITER ;
+✅ NEW.pensja zmienia wartość przed zapisaniem do bazy.
+
+📌 AFTER DELETE – Logowanie usuniętych rekordów
+🔹 Przykład: Po usunięciu pracownika zapisuje jego dane do tabeli pracownicy_usunieci.
+
+sql
+Kopiuj
+Edytuj
+DELIMITER $$  
+CREATE TRIGGER archiwizuj_pracownika
+AFTER DELETE ON pracownicy
+FOR EACH ROW
+BEGIN
+    INSERT INTO pracownicy_usunieci (id, imie, nazwisko, data_usuniecia)
+    VALUES (OLD.id, OLD.imie, OLD.nazwisko, NOW());
+END $$  
+DELIMITER ;
+✅ OLD. odnosi się do danych usuwanego rekordu.
+
+4. NEW. vs OLD. – Jak odwoływać się do danych?
+Sytuacja	**NEW. (Nowa wartość)	OLD. (Stara wartość)
+INSERT	✅ Dostępne	❌ Niedostępne
+UPDATE	✅ Dostępne	✅ Dostępne
+DELETE	❌ Niedostępne	✅ Dostępne
+📌 NEW. → wartości po operacji
+📌 OLD. → wartości przed operacją
+
+5. Jak usunąć trigger?
+Aby usunąć trigger, używamy DROP TRIGGER.
+
+🔹 Przykład:
+
+sql
+Kopiuj
+Edytuj
+DROP TRIGGER IF EXISTS sprawdz_pensje;
+6. Czy triggery mogą zmieniać dane?
+✅ Tak, ale nie mogą wywołać tej samej operacji!
+Np. BEFORE UPDATE nie może wykonywać UPDATE na tej samej tabeli, bo powstanie zapętlenie.
+
+7. Kiedy warto używać triggerów?
+✔ Automatyczne logowanie zmian
+✔ Walidacja danych przed zapisaniem
+✔ Automatyczne modyfikowanie rekordów
+
+❌ Kiedy NIE używać triggerów?
+🚫 Jeśli łatwiej zrobić to w kodzie aplikacji – triggery mogą obciążać bazę.
+
+8. Podsumowanie
+Typ Triggera	Zastosowanie
+BEFORE INSERT	Walidacja danych przed dodaniem
+AFTER INSERT	Automatyczne logowanie zmian
+BEFORE UPDATE	Zmiana wartości przed aktualizacją
+AFTER DELETE	Archiwizacja usuniętych rekordów
+🔹 Główna zaleta triggerów?
+👉 Automatyzują operacje i zwiększają spójność danych!
+
+
+
+================================================================================================NORMALIZACJA==================================================================
+
+Normalizacja w bazach danych – Proste wyjaśnienie
+Czym jest normalizacja?
+
+Normalizacja to proces, który pozwala na uporządkowanie danych w bazach danych w taki sposób, żeby były one przechowywane w jak najprostszej formie, bez powtarzających się informacji i problemów związanych z aktualizacją czy usuwaniem danych. Celem normalizacji jest eliminowanie tzw. anomalii, takich jak:
+
+Anomalie aktualizacji – trudność w modyfikowaniu danych w jednym miejscu, co może prowadzić do niespójności.
+Anomalie wstawiania – niemożność dodania danych bez błędów.
+Anomalie usuwania – przypadkowe usunięcie ważnych danych.
+Formy normalne – krok po kroku
+Normalizacja bazuje na tzw. formach normalnych. Każda forma to pewna zasada, która eliminuje różne rodzaje problemów w bazie danych. Zacznijmy od pierwszej formy i idźmy do bardziej zaawansowanych.
+
+1. Pierwsza Forma Normalna (1NF)
+Założenia:
+
+Wszystkie kolumny w tabeli muszą zawierać jedną wartość. Nie mogą to być listy czy zbiory.
+Wszystkie wiersze muszą być unikalne.
+
+2. Druga Forma Normalna (2NF)
+Założenia:
+
+Tabela musi być w 1NF.
+Każdy atrybut w tabeli musi zależeć w pełni od klucza głównego. Jeśli w tabeli jest klucz złożony (np. więcej niż jedna kolumna identyfikuje rekord), to nie może być tak, że jedna kolumna zależy tylko od części tego klucza.
+
+3. Trzecia Forma Normalna (3NF)
+Założenia:
+
+Tabela musi być w 2NF.
+Żadne dane nie mogą zależeć od innych atrybutów w tabeli (tzw. zależności przejściowe). Każdy atrybut musi zależeć tylko od klucza głównego.
+
+4. Czwórta Forma Normalna (4NF)
+Założenia:
+
+Tabela musi być w 3NF.
+Nie może występować tzw. wielowartościowa zależność. Oznacza to, że jedna kolumna nie może zależeć od dwóch innych kolumn jednocześnie, co prowadziłoby do powtórzeń w tabeli.
+
+5. Piąta Forma Normalna (5NF)
+Założenia:
+
+Tabela musi być w 4NF.
+Tabela nie może zawierać danych, które można by rozbić na mniejsze części bez utraty informacji. Chodzi o rozdzielenie danych, które są ze sobą powiązane, w taki sposób, żeby nie było konieczności łączenia tabel w sposób, który prowadziłby do utraty informacji.
+
+
+Podsumowanie
+Normalizacja to sposób organizowania danych w bazach danych. Dzięki niej dane są przechowywane w sposób uporządkowany, co ułatwia ich aktualizowanie i zapewnia, że nie występują niepotrzebne powtórzenia. Normalizujemy dane, aby zmniejszyć problemy z aktualizowaniem, wstawianiem czy usuwaniem danych. Zaczynamy od 1NF i przechodzimy przez kolejne formy, aż dane są idealnie zorganizowane, a baza jest bardziej wydajna i mniej podatna na błędy.
+
