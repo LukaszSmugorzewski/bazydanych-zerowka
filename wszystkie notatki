@@ -1,0 +1,266 @@
+
+===============================================================================================================TRANSAKCJE=============================================================================================
+
+
+1. Co to jest transakcja w bazie danych?
+Transakcja to zbiór operacji na bazie danych, które są wykonywane jako jedna, niepodzielna jednostka pracy.
+Oznacza to, że albo wszystkie operacje w transakcji zostaną wykonane (zatwierdzone), albo żadna z nich (cofnięcie zmian).
+
+🔹 Przykład transakcji:
+Wyobraź sobie, że chcesz przelać pieniądze z konta A na konto B.
+Wymaga to dwóch operacji:
+
+Odjęcie kwoty z konta A
+Dodanie tej samej kwoty do konta B
+Co się stanie, jeśli odejmiemy pieniądze z konta A, ale przed dodaniem ich do konta B nastąpi awaria systemu?
+Bez transakcji moglibyśmy utracić pieniądze, bo tylko pierwsza operacja zostałaby wykonana.
+
+Właśnie dlatego transakcja gwarantuje, że albo obie operacje się wykonają, albo żadna z nich!
+
+2. Zasady transakcji – ACID
+Każda transakcja powinna spełniać cztery podstawowe zasady ACID:
+
+Zasada	Opis
+A (Atomicity, Niepodzielność)	Transakcja jest niepodzielna – albo wykonuje się w całości, albo nie wykonuje się wcale.
+C (Consistency, Spójność)	Po zakończeniu transakcji baza danych musi pozostać w spójnym stanie (np. saldo konta się zgadza).
+I (Isolation, Izolacja)	Równocześnie działające transakcje nie powinny sobie przeszkadzać.
+D (Durability, Trwałość)	Po zatwierdzeniu (COMMIT) zmiany nie mogą zostać utracone.
+✅ Dzięki tym zasadom baza danych działa poprawnie i bez błędów!
+
+3. Jak działają transakcje w SQL?
+W SQL transakcje obsługujemy za pomocą trzech podstawowych poleceń:
+
+1️⃣ Rozpoczęcie transakcji
+
+sql
+Kopiuj
+Edytuj
+START TRANSACTION; -- Rozpoczynamy transakcję
+2️⃣ Wykonanie operacji
+
+sql
+Kopiuj
+Edytuj
+UPDATE konto SET saldo = saldo - 100 WHERE id = 1;  -- Odejmujemy 100 zł z konta 1
+UPDATE konto SET saldo = saldo + 100 WHERE id = 2;  -- Dodajemy 100 zł do konta 2
+3️⃣ Zatwierdzenie zmian (COMMIT) lub ich anulowanie (ROLLBACK)
+
+sql
+Kopiuj
+Edytuj
+COMMIT;   -- Potwierdzamy transakcję, zapisując zmiany
+-- LUB
+ROLLBACK; -- Cofamy transakcję, usuwając wszystkie zmiany
+🟢 Jeśli wszystko działa dobrze → COMMIT zapisuje zmiany w bazie.
+🔴 Jeśli coś poszło nie tak → ROLLBACK przywraca bazę do poprzedniego stanu.
+
+4. Problemy przy równoczesnych transakcjach
+Gdy wiele transakcji działa w tym samym czasie, mogą pojawić się problemy, np.:
+
+Problem	Opis
+Dirty Read (brudny odczyt)	Transakcja A czyta dane, które transakcja B zmieniła, ale nie zatwierdziła (COMMIT). Jeśli transakcja B zrobi ROLLBACK, transakcja A bazuje na błędnych danych.
+Non-Repeatable Read (niepowtarzalny odczyt)	Transakcja A odczytuje te same dane dwa razy, ale transakcja B je zmienia między odczytami.
+Phantom Read (widmowy odczyt)	Transakcja A wykonuje zapytanie np. SELECT * FROM klienci WHERE wiek > 18, a transakcja B dodaje nowy rekord pasujący do warunku – A dostaje inny wynik niż poprzednio.
+5. Poziomy izolacji w SQL (jak transakcje wpływają na siebie nawzajem)
+Poziomy izolacji określają, jak bardzo transakcje mogą na siebie wpływać.
+Im wyższy poziom izolacji, tym mniejsze ryzyko błędów, ale większy spadek wydajności.
+
+Poziom izolacji	Chroni przed:
+READ UNCOMMITTED	❌ Brak ochrony, może wystąpić Dirty Read
+READ COMMITTED	✅ Blokuje Dirty Read, ale może wystąpić Non-Repeatable Read
+REPEATABLE READ	✅ Blokuje Dirty Read i Non-Repeatable Read, ale może wystąpić Phantom Read
+SERIALIZABLE	✅ Blokuje wszystkie błędy, ale jest najwolniejszy
+6. Przykłady poziomów izolacji w SQL
+Każdy poziom izolacji możemy ustawić w transakcji:
+
+🔹 READ COMMITTED (domyślny poziom w SQL Server i Oracle)
+
+sql
+Kopiuj
+Edytuj
+SET TRANSACTION ISOLATION LEVEL READ COMMITTED;
+START TRANSACTION;
+SELECT * FROM klienci;
+COMMIT;
+✅ Blokuje brudne odczyty (Dirty Read).
+
+🔹 SERIALIZABLE (najbezpieczniejszy, ale najwolniejszy)
+
+sql
+Kopiuj
+Edytuj
+SET TRANSACTION ISOLATION LEVEL SERIALIZABLE;
+START TRANSACTION;
+SELECT * FROM zamowienia WHERE status = 'oczekujące';
+COMMIT;
+✅ Gwarantuje maksymalną izolację, ale może powodować blokady.
+
+7. Podsumowanie – co warto zapamiętać?
+✔ Transakcja to seria operacji, które wykonują się razem.
+✔ ACID zapewnia bezpieczeństwo i spójność transakcji.
+✔ Poziomy izolacji określają, jak transakcje wpływają na siebie nawzajem.
+✔ Im wyższy poziom izolacji, tym mniejsze ryzyko błędów, ale większy spadek wydajności.
+
+==================================================================================================FUNKCJE=======================================================================
+
+
+Oczywiście! Omówię funkcje w bazach danych, w szczególności w SQL, ponieważ są one kluczowym elementem pracy z danymi.
+
+1. Co to jest funkcja w SQL?
+Funkcja to blok kodu, który przyjmuje argumenty, wykonuje określone operacje i zwraca wynik.
+Dzięki funkcjom można manipulować danymi, wykonywać obliczenia i automatyzować operacje w bazie danych.
+
+Rodzaje funkcji w SQL:
+1️⃣ Funkcje skalarne – zwracają pojedynczą wartość
+2️⃣ Funkcje agregujące – operują na wielu wierszach i zwracają jedną wartość
+3️⃣ Funkcje użytkownika (UDF) – tworzone przez programistę
+
+2. Funkcje skalarne (jednowierszowe)
+Zwracają jedną wartość na podstawie pojedynczego wiersza danych.
+
+📌 Przykłady funkcji skalarnych:
+✅ Funkcje matematyczne
+Funkcja	Opis	Przykład
+ABS(x)	Wartość bezwzględna	SELECT ABS(-5); → 5
+ROUND(x, d)	Zaokrąglanie do d miejsc po przecinku	SELECT ROUND(3.1415, 2); → 3.14
+CEIL(x)	Zaokrąglenie w górę	SELECT CEIL(2.3); → 3
+FLOOR(x)	Zaokrąglenie w dół	SELECT FLOOR(2.9); → 2
+✅ Funkcje tekstowe
+Funkcja	Opis	Przykład
+UPPER(str)	Zamienia na wielkie litery	SELECT UPPER('test'); → TEST
+LOWER(str)	Zamienia na małe litery	SELECT LOWER('TeSt'); → test
+LENGTH(str)	Długość ciągu znaków	SELECT LENGTH('SQL'); → 3
+CONCAT(str1, str2)	Łączenie tekstów	SELECT CONCAT('Hello', ' World'); → Hello World
+SUBSTRING(str, start, len)	Wyciąganie fragmentu tekstu	SELECT SUBSTRING('SQL Tutorial', 5, 7); → Tutorial
+✅ Funkcje daty i czasu
+Funkcja	Opis	Przykład
+NOW()	Zwraca aktualną datę i godzinę	SELECT NOW();
+CURDATE()	Zwraca bieżącą datę	SELECT CURDATE();
+YEAR(date)	Pobiera rok	SELECT YEAR('2024-01-29'); → 2024
+DATE_ADD(date, INTERVAL x UNIT)	Dodaje czas	SELECT DATE_ADD('2024-01-01', INTERVAL 7 DAY);
+3. Funkcje agregujące
+Działają na wielu wierszach i zwracają jedną wartość.
+Najczęściej używane w GROUP BY.
+
+Funkcja	Opis	Przykład
+COUNT(*)	Liczy wiersze	SELECT COUNT(*) FROM klienci;
+SUM(kolumna)	Sumuje wartości	SELECT SUM(saldo) FROM konta;
+AVG(kolumna)	Średnia wartość	SELECT AVG(wiek) FROM pracownicy;
+MIN(kolumna)	Najmniejsza wartość	SELECT MIN(pensja) FROM pracownicy;
+MAX(kolumna)	Największa wartość	SELECT MAX(pensja) FROM pracownicy;
+🔹 Przykład użycia z GROUP BY:
+
+sql
+Kopiuj
+Edytuj
+SELECT stanowisko, AVG(pensja)
+FROM pracownicy
+GROUP BY stanowisko;
+✅ Obliczy średnią pensję dla każdego stanowiska.
+
+4. Funkcje użytkownika (UDF - User Defined Functions)
+Jeśli w SQL brakuje funkcji, którą potrzebujesz, możesz stworzyć własną funkcję!
+
+📌 Jak stworzyć funkcję w SQL Server?
+sql
+Kopiuj
+Edytuj
+CREATE FUNCTION oblicz_podatek (@kwota DECIMAL(10,2))
+RETURNS DECIMAL(10,2)
+AS
+BEGIN
+    RETURN @kwota * 0.23;  -- Podatek 23%
+END;
+🔹 Jak używać funkcji?
+
+sql
+Kopiuj
+Edytuj
+SELECT dbo.oblicz_podatek(1000); -- Zwróci 230
+✅ Zalety funkcji użytkownika: ✔ Możesz ich używać jak wbudowanych funkcji
+✔ Mogą zwracać jedną wartość lub tabelę
+
+5. Podsumowanie
+🔹 Funkcje skalarne → operują na jednym wierszu, np. UPPER(), ROUND()
+🔹 Funkcje agregujące → działają na wielu wierszach, np. SUM(), AVG()
+🔹 Funkcje użytkownika (UDF) → tworzone przez programistów
+
+
+=================================================================================================PROCEDURY==============================================================================================
+
+
+1. Co to są procedury składowane w SQL?
+Procedura składowana (Stored Procedure) to zbiór poleceń SQL zapisanych w bazie danych, które można wielokrotnie uruchamiać.
+Jest to jak funkcja, ale różni się tym, że może wykonywać wiele operacji i nie musi zwracać wartości.
+
+2. Jak stworzyć procedurę w SQL?
+🔹 Przykład prostej procedury w MySQL:
+
+sql
+Kopiuj
+Edytuj
+DELIMITER $$  
+CREATE PROCEDURE WyswietlPracownikow()
+BEGIN
+    SELECT * FROM pracownicy;
+END $$  
+DELIMITER ;
+🔹 Jak wywołać procedurę?
+
+sql
+Kopiuj
+Edytuj
+CALL WyswietlPracownikow();
+✅ Procedura wyświetli wszystkich pracowników z tabeli.
+
+3. Procedury z parametrami
+Procedury mogą przyjmować parametry wejściowe (IN), wyjściowe (OUT) i wejściowo-wyjściowe (INOUT).
+
+🔹 Procedura z parametrem wejściowym (IN)
+
+sql
+Kopiuj
+Edytuj
+DELIMITER $$  
+CREATE PROCEDURE ZnajdzPracownika(IN pracownik_id INT)
+BEGIN
+    SELECT * FROM pracownicy WHERE id = pracownik_id;
+END $$  
+DELIMITER ;
+🔹 Wywołanie procedury:
+
+sql
+Kopiuj
+Edytuj
+CALL ZnajdzPracownika(3); -- Znajdzie pracownika o ID = 3
+🔹 Procedura z parametrem wyjściowym (OUT)
+
+sql
+Kopiuj
+Edytuj
+DELIMITER $$  
+CREATE PROCEDURE PoliczPracownikow(OUT liczba INT)
+BEGIN
+    SELECT COUNT(*) INTO liczba FROM pracownicy;
+END $$  
+DELIMITER ;
+🔹 Wywołanie procedury z parametrem OUT:
+
+sql
+Kopiuj
+Edytuj
+CALL PoliczPracownikow(@wynik);
+SELECT @wynik; -- Zwróci liczbę pracowników
+4. Procedury vs Funkcje – Najważniejsze różnice
+Cecha	Procedura	Funkcja
+Zwraca wartość?	❌ Nie musi	✅ Tak
+Zwraca więcej niż jedną wartość?	✅ Tak (może zwracać wiele wyników)	❌ Nie (zwraca tylko jedną wartość)
+Może modyfikować dane? (INSERT, UPDATE, DELETE)	✅ Tak	❌ Nie
+Może być używana w SELECT?	❌ Nie	✅ Tak
+Obsługuje parametry IN/OUT/INOUT?	✅ Tak	❌ Funkcja ma tylko IN
+Użycie w JOIN, WHERE	❌ Nie można używać	✅ Można używać
+📌 Główna różnica → Funkcje są do obliczeń, procedury do wykonywania operacji.
+
+5. Kiedy używać funkcji, a kiedy procedur?
+✔ Funkcji, gdy potrzebujesz zwrócić pojedynczą wartość i używać jej w SELECT
+✔ Procedury, gdy wykonujesz kilka operacji na bazie (np. modyfikacje, transakcje)
